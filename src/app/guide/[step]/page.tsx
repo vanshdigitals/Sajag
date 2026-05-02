@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useProgressStore } from '@/store/useProgressStore';
 import { guideSteps } from '@/lib/guideData';
-import { explainSimply } from '@/lib/gemini';
+import { auth, db, logAppEvent } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 import styles from './page.module.css';
 
 const StepPage = () => {
@@ -38,9 +39,36 @@ const StepPage = () => {
 
   const handleAskAi = async () => {
     setIsAskingAi(true);
-    const explanation = await explainSimply(stepContent.title, stepContent.description);
-    setAiExplanation(explanation);
-    setIsAskingAi(false);
+
+    const prompt = `
+      You are an expert election assistant for Indian citizens. 
+      Explain the following topic simply for a first-time voter: "${stepContent.title}".
+      Context: ${stepContent.description}
+      
+      Rules:
+      - Use simple analogies (like getting a library card or using an ATM).
+      - Keep it under 3 sentences.
+      - Be friendly and encouraging.
+      - Avoid legal jargon.
+    `;
+
+    try {
+      const response = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt }),
+      });
+      const data = await response.json();
+      
+      if (!response.ok) throw new Error(data.error);
+      
+      setAiExplanation(data.text);
+    } catch (error) {
+      console.error("Gemini API Error:", error);
+      setAiExplanation("I'm sorry, I'm having trouble explaining that right now. Please try again later.");
+    } finally {
+      setIsAskingAi(false);
+    }
   };
 
   const handleNext = () => {
@@ -57,8 +85,27 @@ const StepPage = () => {
     }
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     setStepCompleted(stepIndex, true);
+    
+    // Log the event
+    logAppEvent('step_completed', {
+      step_id: stepContent.id,
+      step_title: stepContent.title
+    });
+
+    if (auth.currentUser) {
+      try {
+        const progressRef = doc(db, 'users', auth.currentUser.uid, 'progress', stepContent.id);
+        await setDoc(progressRef, {
+          completed: true,
+          completedAt: new Date().toISOString()
+        }, { merge: true });
+      } catch (error) {
+        console.error("Failed to save progress to Firestore", error);
+      }
+    }
+    
     handleNext();
   };
 

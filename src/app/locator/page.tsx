@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { MapPin, Search, Navigation, Info, Phone, Clock, Accessibility } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { logAppEvent } from '@/lib/firebase';
 import styles from './page.module.css';
 
 const mockBooths = [
@@ -26,6 +27,11 @@ const BoothLocator = () => {
             placeholder="Search by area, EPIC or PIN code..." 
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && search.trim()) {
+                logAppEvent('booth_search', { search_term: search.trim() });
+              }
+            }}
           />
         </div>
       </div>

@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, User, Bot, Trash2, Sparkles, ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { getGeminiModel } from '@/lib/gemini';
 import styles from './page.module.css';
 
 interface Message {
@@ -36,14 +35,20 @@ const AssistantPage = () => {
     setIsLoading(true);
 
     try {
-      const model = getGeminiModel();
       const prompt = `You are a helpful election assistant for Indian citizens. Answer the following question clearly and simply: ${userMessage}`;
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
       
-      setMessages(prev => [...prev, { role: 'assistant', content: text }]);
+      const response = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt }),
+      });
+      const data = await response.json();
+      
+      if (!response.ok) throw new Error(data.error);
+      
+      setMessages(prev => [...prev, { role: 'assistant', content: data.text }]);
     } catch (error) {
+      console.error("Gemini API Error:", error);
       setMessages(prev => [...prev, { role: 'assistant', content: "I'm sorry, I'm having trouble connecting to the brain. Please try again." }]);
     } finally {
       setIsLoading(false);

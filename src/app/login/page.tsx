@@ -4,8 +4,9 @@ import { motion } from 'framer-motion';
 import { LogIn, ArrowRight, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.css';
 
@@ -15,7 +16,19 @@ const LoginPage = () => {
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      
+      // Save user data to Firestore
+      const userRef = doc(db, 'users', user.uid);
+      await setDoc(userRef, {
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        lastLogin: new Date().toISOString(),
+        createdAt: user.metadata.creationTime || new Date().toISOString()
+      }, { merge: true });
+
       router.push('/dashboard');
     } catch (error) {
       console.error("Login failed", error);

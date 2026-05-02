@@ -5,6 +5,9 @@ import { BookOpen, MapPin, Calendar, MessageSquare, ChevronRight, CheckCircle2 }
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useProgressStore } from '@/store/useProgressStore';
+import { auth, db } from '@/lib/firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 import styles from './page.module.css';
 
 const Dashboard = () => {
@@ -13,6 +16,31 @@ const Dashboard = () => {
 
   useEffect(() => {
     setMounted(true);
+    
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const progressSnapshot = await getDocs(collection(db, 'users', user.uid, 'progress'));
+          progressSnapshot.forEach((docSnap) => {
+            const stepId = docSnap.id;
+            const data = docSnap.data();
+            if (data.completed) {
+              const idx = steps.findIndex(s => s.id === stepId);
+              if (idx !== -1 && !steps[idx].isCompleted) {
+                // To avoid multiple re-renders or stale state in a loop,
+                // Zustand setStepCompleted handles it safely.
+                setStepCompleted(idx, true);
+              }
+            }
+          });
+        } catch (error) {
+          console.error("Error fetching progress from Firestore", error);
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!mounted) return null;

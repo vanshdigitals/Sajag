@@ -19,7 +19,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // Analytics (only on client side)
-let analytics;
+let analytics: any = null;
 if (typeof window !== 'undefined') {
   isSupported().then((supported) => {
     if (supported) {
@@ -27,5 +27,13 @@ if (typeof window !== 'undefined') {
     }
   });
 }
+
+export const logAppEvent = (eventName: string, eventParams?: Record<string, any>) => {
+  if (typeof window !== 'undefined' && analytics) {
+    import('firebase/analytics').then(({ logEvent }) => {
+      logEvent(analytics, eventName, eventParams);
+    }).catch(console.error);
+  }
+};
 
 export { app, auth, db, analytics };
