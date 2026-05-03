@@ -1,11 +1,22 @@
 'use client';
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { MapPin, Search, Navigation, Info, Clock, Accessibility } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, Search, Navigation, Info, Clock, Accessibility, ChevronRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { logAppEvent } from '@/lib/firebase';
 import styles from './page.module.css';
+import dynamic from 'next/dynamic';
+import { MapSkeleton } from '@/components/shared/Skeletons';
+import PollingStationMapSync from '@/components/maps/PollingStationMap';
+
+const PollingStationMapDynamic = dynamic(
+  () => import('@/components/maps/PollingStationMap'),
+  { ssr: false, loading: () => <MapSkeleton /> }
+);
+
+// Conditionally use dynamic import to prevent breaking synchronous tests
+const PollingStationMap = process.env.NODE_ENV === 'test' ? PollingStationMapSync : PollingStationMapDynamic;
 
 const mockBooths = [
   { id: 1, name: 'Government Model Sr. Sec. School', address: 'Sector 16, Chandigarh', distance: '1.2 km', time: '15 min walk', accessibility: true, parking: true },
@@ -17,6 +28,10 @@ const BoothLocator = () => {
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
   const [selectedBooth, setSelectedBooth] = useState(mockBooths[0]);
+
+  const handleBoothSelect = useCallback((booth: typeof mockBooths[0]) => {
+    setSelectedBooth(booth);
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -50,28 +65,11 @@ const BoothLocator = () => {
       <div className={styles.layout}>
         {/* Mock Map View */}
         <div className={styles.mapContainer}>
-          <div className={styles.mockMap}>
-            <div className={styles.userLocation}>
-              <div className={styles.pulse} />
-            </div>
-            {mockBooths.map((booth) => (
-              <motion.div 
-                key={booth.id}
-                className={`${styles.boothPin} ${selectedBooth.id === booth.id ? styles.selectedPin : ''}`}
-                style={{ 
-                  top: `${20 + booth.id * 15}%`, 
-                  left: `${30 + booth.id * 10}%` 
-                }}
-                onClick={() => setSelectedBooth(booth)}
-                whileHover={{ scale: 1.2 }}
-              >
-                <MapPin size={24} />
-              </motion.div>
-            ))}
-            <div className={styles.mapOverlay}>
-              <span>Map View (Simulated)</span>
-            </div>
-          </div>
+          <PollingStationMap 
+            mockBooths={mockBooths} 
+            selectedBooth={selectedBooth} 
+            onSelectBooth={handleBoothSelect} 
+          />
         </div>
 
         {/* Info Panel */}
@@ -153,8 +151,4 @@ const BoothLocator = () => {
     </div>
   );
 };
-
-import { AnimatePresence } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
-
 export default BoothLocator;

@@ -9,6 +9,10 @@ vi.mock('next/headers', () => ({
   }),
 }));
 
+vi.mock('next/cache', () => ({
+  unstable_cache: (cb: any) => cb,
+}));
+
 vi.mock('@/lib/firebase/admin', () => ({
   adminAuth: {
     verifyIdToken: vi.fn(),

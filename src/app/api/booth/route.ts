@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { unstable_cache } from 'next/cache';
 import { findBoothsByPin, findNearestBooths, isValidPinArea } from '@/lib/booth';
 import { formatErrorResponse, logError, RateLimitError, ValidationError } from '@/lib/errors';
 import { safeValidate, pinCodeSchema } from '@/lib/validators';
@@ -41,7 +42,12 @@ export async function GET(request: Request) {
 
     if (pin) {
       searchType = 'pin';
-      booths = findBoothsByPin(pin);
+      const getCachedBoothsByPin = unstable_cache(
+        async (p: string) => findBoothsByPin(p),
+        [`booths-pin-${pin}`],
+        { revalidate: 3600 }
+      );
+      booths = await getCachedBoothsByPin(pin);
     } else if (lat && lng) {
       searchType = 'coordinates';
       const parsedLat = parseFloat(lat);
@@ -56,7 +62,12 @@ export async function GET(request: Request) {
         throw new ValidationError('Radius must be a valid number');
       }
 
-      booths = findNearestBooths(parsedLat, parsedLng, parsedRadius);
+      const getCachedBoothsByCoords = unstable_cache(
+        async (lt: number, lg: number, rad: number) => findNearestBooths(lt, lg, rad),
+        [`booths-coords-${parsedLat}-${parsedLng}-${parsedRadius}`],
+        { revalidate: 3600 }
+      );
+      booths = await getCachedBoothsByCoords(parsedLat, parsedLng, parsedRadius);
     } else {
       throw new ValidationError('Must provide either a "pin" parameter or "lat" and "lng" parameters');
     }
