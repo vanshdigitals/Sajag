@@ -13,3 +13,11 @@ yarn-error.log*
 .pnpm-debug.log*
 *.pem
 .DS_Store
+
+# testing files
+src/__tests__/
+**/*.test.ts
+**/*.test.tsx
+vitest.config.ts
+src/test/
+tests/
