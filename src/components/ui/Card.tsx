@@ -15,18 +15,23 @@ export const Card: React.FC<CardProps> = ({ children, className, variant = 'defa
   );
 };
 
-export const CardHeader: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className={styles.header}>{children}</div>
+interface SubCardProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const CardHeader: React.FC<SubCardProps> = ({ children, className }) => (
+  <div className={`${styles.header} ${className || ''}`.trim()}>{children}</div>
 );
 
-export const CardTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <h3 className={styles.title}>{children}</h3>
+export const CardTitle: React.FC<SubCardProps> = ({ children, className }) => (
+  <h3 className={`${styles.title} ${className || ''}`.trim()}>{children}</h3>
 );
 
-export const CardContent: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className={styles.content}>{children}</div>
+export const CardContent: React.FC<SubCardProps> = ({ children, className }) => (
+  <div className={`${styles.content} ${className || ''}`.trim()}>{children}</div>
 );
 
-export const CardFooter: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <div className={styles.footer}>{children}</div>
+export const CardFooter: React.FC<SubCardProps> = ({ children, className }) => (
+  <div className={`${styles.footer} ${className || ''}`.trim()}>{children}</div>
 );

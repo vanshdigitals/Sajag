@@ -128,7 +128,7 @@ const StepPage = () => {
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={stepId}
+          key={Array.isArray(stepId) ? stepId[0] : stepId}
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}

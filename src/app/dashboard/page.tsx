@@ -11,7 +11,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import styles from './page.module.css';
 
 const Dashboard = () => {
-  const { steps, currentStepIndex } = useProgressStore();
+  const { steps, currentStepIndex, setStepCompleted } = useProgressStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

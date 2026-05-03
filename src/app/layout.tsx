@@ -22,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AnalyticsTracker />
+        <React.Suspense fallback={null}>
+          <AnalyticsTracker />
+        </React.Suspense>
         <SplashScreen />
         <Navbar />
         <main style={{ paddingBottom: '70px', minHeight: '100vh' }}>

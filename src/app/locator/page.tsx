@@ -15,6 +15,7 @@ const mockBooths = [
 
 const BoothLocator = () => {
   const [search, setSearch] = useState('');
+  const [error, setError] = useState('');
   const [selectedBooth, setSelectedBooth] = useState(mockBooths[0]);
 
   return (
@@ -26,14 +27,24 @@ const BoothLocator = () => {
             type="text" 
             placeholder="Search by area, EPIC or PIN code..." 
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setError(''); // Clear error on typing
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && search.trim()) {
-                logAppEvent('booth_search', { search_term: search.trim() });
+                const term = search.trim();
+                // If it looks like a PIN (6 chars) but has letters, show error
+                if (term.length === 6 && !/^\d{6}$/.test(term)) {
+                  setError('Invalid PIN code format. Please enter 6 digits.');
+                  return;
+                }
+                logAppEvent('booth_search', { search_term: term });
               }
             }}
           />
         </div>
+        {error && <p className={styles.errorText} role="alert" style={{ color: 'red', marginTop: '8px', fontSize: '14px' }}>{error}</p>}
       </div>
 
       <div className={styles.layout}>
