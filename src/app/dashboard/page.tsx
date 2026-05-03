@@ -11,10 +11,11 @@ import { onAuthStateChanged } from 'firebase/auth';
 import styles from './page.module.css';
 
 const Dashboard = () => {
-  const { steps, currentStepIndex, setStepCompleted } = useProgressStore();
+  const { steps, setStepCompleted } = useProgressStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -59,7 +60,7 @@ const Dashboard = () => {
     <div className={styles.container}>
       <header className={styles.header}>
         <h1>Welcome back!</h1>
-        <p>You're {progressPercent}% ready for the election.</p>
+        <p>You&apos;re {progressPercent}% ready for the election.</p>
       </header>
 
       <div className={styles.grid}>

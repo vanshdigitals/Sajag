@@ -6,9 +6,12 @@ import BoothLocator from '@/app/locator/page';
 // Mock framer-motion to avoid animation issues in tests
 vi.mock('framer-motion', () => ({
   motion: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     circle: ({ children, ...props }: any) => <circle {...props}>{children}</circle>,
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
 

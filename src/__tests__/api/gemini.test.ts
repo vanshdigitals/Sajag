@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { POST } from '@/app/api/gemini/route';
 
 // Mock the GoogleGenerativeAI library
@@ -28,7 +28,7 @@ describe('Gemini API Route (/api/gemini)', () => {
 
   it('returns response for a valid prompt', async () => {
     // Setup the mock response
-    (_mockGenerateContent as any).mockResolvedValueOnce({
+    (_mockGenerateContent as Mock).mockResolvedValueOnce({
       response: {
         text: () => 'This is a mocked Gemini response'
       }
@@ -61,7 +61,7 @@ describe('Gemini API Route (/api/gemini)', () => {
 
   it('returns 500 error on API failure', async () => {
     // Setup the mock to throw an error
-    (_mockGenerateContent as any).mockRejectedValueOnce(new Error('API rate limit exceeded'));
+    (_mockGenerateContent as Mock).mockRejectedValueOnce(new Error('API rate limit exceeded'));
 
     const request = new Request('http://localhost/api/gemini', {
       method: 'POST',

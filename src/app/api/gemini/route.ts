@@ -3,6 +3,12 @@ import { NextResponse } from "next/server";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
+/**
+ * Handles POST requests to generate content using the Google Gemini API.
+ * 
+ * @param {Request} request - The incoming HTTP request containing the prompt in its JSON body.
+ * @returns {Promise<NextResponse>} A JSON response containing the generated text or an error message.
+ */
 export async function POST(request: Request) {
   try {
     const { prompt } = await request.json();

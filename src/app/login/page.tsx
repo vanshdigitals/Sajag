@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LogIn, ArrowRight, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { auth, db } from '@/lib/firebase';
@@ -49,6 +49,7 @@ const LoginPage = () => {
         <Card className={styles.loginCard}>
           <CardContent className={styles.cardContent}>
             <Button onClick={handleGoogleLogin} variant="outline" className={styles.googleBtn}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width={20} />
               Continue with Google
             </Button>

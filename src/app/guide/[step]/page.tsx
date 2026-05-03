@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, CheckCircle, Sparkles, ExternalLink } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sparkles, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useProgressStore } from '@/store/useProgressStore';
@@ -24,6 +24,7 @@ const StepPage = () => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
     if (stepIndex !== -1) setCurrentStep(stepIndex);
   }, [stepIndex, setCurrentStep]);

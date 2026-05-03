@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, BookOpen, Calendar, MapPin, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {

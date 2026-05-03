@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Search, Navigation, Info, Phone, Clock, Accessibility } from 'lucide-react';
+import { MapPin, Search, Navigation, Info, Clock, Accessibility } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { logAppEvent } from '@/lib/firebase';

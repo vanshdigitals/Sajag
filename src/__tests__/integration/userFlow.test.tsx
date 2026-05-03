@@ -8,8 +8,10 @@ import { guideSteps } from '@/lib/guideData';
 // Mock framer-motion
 vi.mock('framer-motion', () => ({
   motion: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   AnimatePresence: ({ children }: any) => <>{children}</>,
 }));
 

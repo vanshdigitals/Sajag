@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { LogOut, User as UserIcon, ShieldCheck } from 'lucide-react';
+import { LogOut, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { auth, db } from '@/lib/firebase';
@@ -80,7 +80,10 @@ const ProfilePage = () => {
             <CardContent>
               <div className={styles.avatar}>
                 {user.photoURL ? (
-                  <img src={user.photoURL} alt={user.displayName || 'User'} className={styles.avatarImg} />
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={user.photoURL} alt={user.displayName || 'User'} className={styles.avatarImg} />
+                  </>
                 ) : (
                   user.displayName?.charAt(0).toUpperCase() || 'U'
                 )}
@@ -110,6 +113,7 @@ const ProfilePage = () => {
               <p className={styles.userEmail}>Sign in to save your progress across devices.</p>
               
               <Button onClick={handleSignIn} className={styles.signInBtn}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
                   src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
                   alt="Google" 

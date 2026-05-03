@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Send, User, Bot, Trash2, Sparkles, ChevronLeft } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Send, User, Bot, Trash2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import styles from './page.module.css';
 
