@@ -70,9 +70,9 @@ describe('Error Handling System', () => {
       }
       try {
         throwError();
-      } catch (e: any) {
-        expect(e.stack).toBeDefined();
-        expect(e.stack).toContain('throwError');
+      } catch (e: unknown) {
+        expect((e as Error).stack).toBeDefined();
+        expect((e as Error).stack).toContain('throwError');
       }
     });
   });

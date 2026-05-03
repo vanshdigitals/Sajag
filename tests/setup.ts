@@ -10,7 +10,7 @@ vi.mock('next/headers', () => ({
 }));
 
 vi.mock('next/cache', () => ({
-  unstable_cache: (cb: any) => cb,
+  unstable_cache: (cb: (...args: unknown[]) => unknown) => cb,
 }));
 
 vi.mock('@/lib/firebase/admin', () => ({

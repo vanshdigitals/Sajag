@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
+import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Send, User, Bot, Trash2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -100,7 +100,7 @@ const AIChatInterface = () => {
         </Button>
       </header>
 
-      <div className={styles.chatArea}>
+      <div className={styles.chatArea} aria-live="polite" aria-atomic="false" aria-label="Chat messages">
         {messages.map((msg, i) => (
           <ChatMessageBubble key={i} msg={msg} />
         ))}
@@ -129,7 +129,7 @@ const AIChatInterface = () => {
             placeholder="Ask a question..." 
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
           />
           <Button onClick={handleSend} disabled={!input.trim() || isLoading} className={styles.sendBtn}>
             <Send size={20} />

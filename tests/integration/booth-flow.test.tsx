@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import BoothLocatorPage from '@/app/locator/page';
 
 global.fetch = vi.fn();
@@ -10,13 +11,13 @@ const mockGeolocation = {
   watchPosition: vi.fn(),
   clearWatch: vi.fn(),
 };
-(global.navigator as any).geolocation = mockGeolocation;
+(global.navigator as unknown as { geolocation: typeof mockGeolocation }).geolocation = mockGeolocation;
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: vi.fn().mockImplementation((props: any) => props.children),
+    div: vi.fn().mockImplementation((props: { children: React.ReactNode }) => props.children),
   },
-  AnimatePresence: vi.fn().mockImplementation((props: any) => props.children),
+  AnimatePresence: vi.fn().mockImplementation((props: { children: React.ReactNode }) => props.children),
 }));
 
 describe('Booth Locator Flow Integration', () => {

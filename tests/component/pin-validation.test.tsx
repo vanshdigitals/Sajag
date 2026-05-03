@@ -1,13 +1,14 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import BoothLocatorPage from '@/app/locator/page';
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: vi.fn().mockImplementation((props: any) => props.children),
+    div: vi.fn().mockImplementation((props: { children: React.ReactNode }) => props.children),
   },
-  AnimatePresence: vi.fn().mockImplementation((props: any) => props.children),
+  AnimatePresence: vi.fn().mockImplementation((props: { children: React.ReactNode }) => props.children),
 }));
 
 describe('PIN Validation Component Logic', () => {

@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
 import { generateElectionResponse, checkGeminiHealth } from '@/lib/gemini';
 import { ValidationError, ExternalServiceError } from '@/lib/errors';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Mock GoogleGenerativeAI
 vi.mock('@google/generative-ai', () => {
@@ -21,7 +20,7 @@ vi.mock('@google/generative-ai', () => {
 
 // We need to import the mock reference after it's defined
 import * as genAIModule from '@google/generative-ai';
-const _mockGenerateContent = (genAIModule as any)._mockGenerateContent as Mock;
+const _mockGenerateContent = (genAIModule as Record<string, unknown>)._mockGenerateContent as Mock;
 
 describe('Gemini Library', () => {
   beforeEach(() => {

@@ -35,7 +35,7 @@ describe('Booth API Route', () => {
   describe('GET Handler', () => {
     it('returns 200 for valid PIN search', async () => {
       const mockBooths = [{ id: '1', name: 'Booth 1', pinCode: '110001', accessibility: { wheelchair: true } }];
-      vi.mocked(findBoothsByPin).mockReturnValueOnce(mockBooths as any);
+      vi.mocked(findBoothsByPin).mockReturnValueOnce(mockBooths as ReturnType<typeof findBoothsByPin>);
 
       const req = createGetRequest('http://localhost/api/booth?pin=110001');
       const res = await GET(req);
@@ -50,7 +50,7 @@ describe('Booth API Route', () => {
 
     it('returns 200 for valid coordinate search', async () => {
       const mockBooths = [{ id: '2', name: 'Booth 2', lat: 28.6, lng: 77.2 }];
-      vi.mocked(findNearestBooths).mockReturnValueOnce(mockBooths as any);
+      vi.mocked(findNearestBooths).mockReturnValueOnce(mockBooths as ReturnType<typeof findNearestBooths>);
 
       const req = createGetRequest('http://localhost/api/booth?lat=28.6&lng=77.2&radius=10');
       const res = await GET(req);

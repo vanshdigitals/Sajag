@@ -87,9 +87,15 @@ export async function generateElectionResponse(query: string, context?: string):
   }
 }
 
+/** Clears the response cache and pending query map. Intended for use in tests only. */
+export function clearCache(): void {
+  responseCache.clear();
+  pendingQueries.clear();
+}
+
 /**
  * Checks the health of the Gemini API integration.
- * 
+ *
  * @returns A boolean indicating whether the API is healthy
  */
 export async function checkGeminiHealth(): Promise<boolean> {

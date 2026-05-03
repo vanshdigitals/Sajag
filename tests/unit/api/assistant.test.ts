@@ -17,7 +17,7 @@ describe('Assistant API Route', () => {
     vi.clearAllMocks();
   });
 
-  const createRequest = (body: any, ip: string = '127.0.0.1') => {
+  const createRequest = (body: Record<string, unknown> | null, ip: string = '127.0.0.1') => {
     return new Request('http://localhost/api/assistant', {
       method: 'POST',
       headers: {

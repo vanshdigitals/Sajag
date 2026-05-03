@@ -1,16 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import AssistantPage from '@/app/assistant/page';
 
 global.fetch = vi.fn();
 
 vi.mock('framer-motion', () => ({
   motion: {
-    div: vi.fn().mockImplementation((props: any) => props.children),
-    form: vi.fn().mockImplementation((props: any) => props.children),
+    div: vi.fn().mockImplementation((props: { children: React.ReactNode }) => props.children),
+    form: vi.fn().mockImplementation((props: { children: React.ReactNode }) => props.children),
   },
-  AnimatePresence: vi.fn().mockImplementation((props: any) => props.children),
+  AnimatePresence: vi.fn().mockImplementation((props: { children: React.ReactNode }) => props.children),
 }));
 
 global.scrollTo = vi.fn();
@@ -34,7 +35,7 @@ describe('Assistant Flow Integration', () => {
     const input = screen.getByPlaceholderText(/Ask a question.../i);
     await user.type(input, 'How do I register to vote?');
     
-    fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
     expect(screen.getByText('How do I register to vote?')).toBeInTheDocument();
 
@@ -50,7 +51,7 @@ describe('Assistant Flow Integration', () => {
 
     const input = screen.getByPlaceholderText(/Ask a question.../i);
     await user.type(input, 'Will this fail?');
-    fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
     await waitFor(() => {
       expect(screen.getByText(/I'm sorry, I'm having trouble connecting/i)).toBeInTheDocument();
@@ -68,7 +69,7 @@ describe('Assistant Flow Integration', () => {
 
     const input = screen.getByPlaceholderText(/Ask a question.../i);
     await user.type(input, 'a');
-    fireEvent.keyPress(input, { key: 'Enter', code: 'Enter', charCode: 13 });
+    fireEvent.keyDown(input, { key: 'Enter', code: 'Enter' });
 
     await waitFor(() => {
       expect(screen.getByText(/I'm sorry, I'm having trouble connecting/i)).toBeInTheDocument();
